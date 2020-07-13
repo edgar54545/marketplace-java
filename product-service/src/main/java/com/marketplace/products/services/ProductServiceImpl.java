@@ -2,72 +2,83 @@ package com.marketplace.products.services;
 
 import com.marketplace.products.domain.Category;
 import com.marketplace.products.domain.Product;
+import com.marketplace.products.domain.Status;
 import com.marketplace.products.repository.ProductRepository;
+import com.marketplace.products.web.errors_handle.EntityNotFoundException;
+import com.marketplace.products.web.model.SearchParams;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-//TODO handle Exceptions properly, create SearchDTO and Implement with MongoTemplate
 public class ProductServiceImpl implements ProductService {
     private static final Integer DEFAULT_PAGE_NUMBER = 0;
     private static final Integer PAGE_SIZE = 10;
+    private static final BigDecimal START_PRICE = BigDecimal.ZERO;
+    private static final BigDecimal FINAL_PRICE = BigDecimal.valueOf(Integer.MAX_VALUE);
 
     private final ProductRepository productRepository;
-    private final MongoTemplate mongoTemplate;
 
     @Override
     public Product addProduct(Product product) {
-        product.setCreatedDate(new Date());
-        return mongoTemplate.save(product);
+        product.setCreatedDate(LocalDateTime.now());
+        product.setStatus(Status.PENDING);
+
+        return productRepository.addProduct(product);
     }
 
     @Override
     public Product getProductById(String productId) {
-        Query query = new Query();
-        query.addCriteria(Criteria.where("_id").is(productId));
-        Optional<Product> productOpt = Optional.ofNullable(mongoTemplate.findOne(query, Product.class));
+        Optional<Product> productOpt = Optional.ofNullable(productRepository.getProductById(productId));
 
-        return productOpt.orElseThrow(RuntimeException::new);
+        return productOpt.orElseThrow(() -> new EntityNotFoundException(productId));
     }
 
-    public Product getProductByName(String name) {
-        Query query = new Query();
-        query.addCriteria(Criteria.where("name").is(name));
-        Optional<Product> productOpt = Optional.ofNullable(mongoTemplate.findOne(query, Product.class));
+    @Override
+    public Product getProductByName(String name, String ownerId) {
+        Objects.requireNonNull(name);
+        Objects.requireNonNull(ownerId);
 
-        return productOpt.orElseThrow(RuntimeException::new);
+        Optional<Product> productOpt = Optional.ofNullable(productRepository.getProductByName(name, ownerId));
+
+        return productOpt.orElseThrow(() -> new EntityNotFoundException(name));
     }
 
     @Override
     public List<Product> getProductsByCategory(Category category, Integer pageNumber) {
         Objects.requireNonNull(category);
-        Integer pageNumberTemp = pageNumber == null ? DEFAULT_PAGE_NUMBER : pageNumber;
 
-        Query query = new Query();
-        query.addCriteria(Criteria.where("category").is(category))
-                .with(PageRequest.of(pageNumberTemp, PAGE_SIZE));
-
-        return mongoTemplate.find(query, Product.class);
+        return productRepository.getProductsByCategory(category, pageRequest(pageNumber));
     }
 
     @Override
-    public List<Product> getProductsByOwnerId(String ownerId, Integer pageNumber) {
-        Objects.requireNonNull(ownerId);
-        Integer pageNumberTemp = pageNumber == null ? DEFAULT_PAGE_NUMBER : pageNumber;
-
-        return productRepository.getProductsByOwnerId(ownerId, PageRequest.of(pageNumberTemp, PAGE_SIZE))
-                .getContent();
+    public List<Product> getProductsByOwnerUserName(String ownerUserName, Integer pageNumber) {
+        return productRepository.getProductsByOwnerUserName(ownerUserName, pageRequest(pageNumber));
     }
 
+    @Override
+    public List<Product> getProductsBySearchProperties(SearchParams searchParams, Integer pageNumber) {
+        if(searchParams.getStartPrice() == null) {
+            searchParams.setStartPrice(START_PRICE);
+        }
+
+        if (searchParams.getFinalPrice() == null) {
+            searchParams.setFinalPrice(FINAL_PRICE);
+        }
+
+        return productRepository.getProductBySearch(searchParams, pageRequest(pageNumber));
+    }
+
+    private Pageable pageRequest(Integer pageNumber) {
+        return pageNumber == null ? PageRequest.of(DEFAULT_PAGE_NUMBER, PAGE_SIZE) :
+                PageRequest.of(pageNumber, PAGE_SIZE);
+    }
 }

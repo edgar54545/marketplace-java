@@ -2,16 +2,21 @@ package com.marketplace.products.repository;
 
 import com.marketplace.products.domain.Category;
 import com.marketplace.products.domain.Product;
-import org.springframework.data.domain.Page;
+import com.marketplace.products.web.model.SearchParams;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.repository.MongoRepository;
 
-import java.util.Optional;
+import java.util.List;
 
-public interface ProductRepository extends MongoRepository<Product, String> {
-    Optional<Product> getProductByName(String name);
+public interface ProductRepository {
+    Product addProduct(Product product);
 
-    Page<Product> getProductsByCategory(Category category, Pageable pageable);
+    Product getProductById(String productId);
 
-    Page<Product> getProductsByOwnerId(String ownerId, Pageable pageable);
+    Product getProductByName(String name, String ownerId);
+
+    List<Product> getProductsByCategory(Category category, Pageable pageable);
+
+    List<Product> getProductsByOwnerUserName(String ownerId, Pageable pageable);
+
+    List<Product> getProductBySearch(SearchParams searchParams, Pageable pageRequest);
 }
