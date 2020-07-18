@@ -9,5 +9,7 @@ import java.util.Optional;
 public interface UserService {
     User addUser(UserDto userDto);
 
-    UserDto getUserByUserName(String userName);
+    UserDto getUserByUserName(String username);
+
+    void update(String username, UserDto userDto);
 }

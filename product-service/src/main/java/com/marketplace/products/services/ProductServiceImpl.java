@@ -28,18 +28,28 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
 
     @Override
-    public Product addProduct(Product product) {
+    public Product add(Product product) {
         product.setCreatedDate(LocalDateTime.now());
         product.setStatus(Status.PENDING);
 
-        return productRepository.addProduct(product);
+        return productRepository.add(product);
     }
 
     @Override
-    public Product getProductById(String productId) {
-        Optional<Product> productOpt = Optional.ofNullable(productRepository.getProductById(productId));
+    public Product productById(String productId) {
+        Optional<Product> productOpt = Optional.ofNullable(productRepository.productById(productId));
 
         return productOpt.orElseThrow(() -> new EntityNotFoundException(productId));
+    }
+
+    @Override
+    public Product update(String id, Product product) {
+        return productRepository.update(id, product);
+    }
+
+    @Override
+    public void delete(String id) {
+        productRepository.delete(id);
     }
 
     @Override
@@ -47,25 +57,25 @@ public class ProductServiceImpl implements ProductService {
         Objects.requireNonNull(name);
         Objects.requireNonNull(ownerId);
 
-        Optional<Product> productOpt = Optional.ofNullable(productRepository.getProductByName(name, ownerId));
+        Optional<Product> productOpt = Optional.ofNullable(productRepository.productByName(name, ownerId));
 
         return productOpt.orElseThrow(() -> new EntityNotFoundException(name));
     }
 
     @Override
-    public List<Product> getProductsByCategory(Category category, Integer pageNumber) {
+    public List<Product> productsByCategory(Category category, Integer pageNumber) {
         Objects.requireNonNull(category);
 
-        return productRepository.getProductsByCategory(category, pageRequest(pageNumber));
+        return productRepository.productsByCategory(category, pageRequest(pageNumber));
     }
 
     @Override
-    public List<Product> getProductsByOwnerUserName(String ownerUserName, Integer pageNumber) {
-        return productRepository.getProductsByOwnerUserName(ownerUserName, pageRequest(pageNumber));
+    public List<Product> productsByOwnerUserName(String ownerUserName, Integer pageNumber) {
+        return productRepository.productsByOwnerUserName(ownerUserName, pageRequest(pageNumber));
     }
 
     @Override
-    public List<Product> getProductsBySearchProperties(SearchParams searchParams, Integer pageNumber) {
+    public List<Product> productsBySearchProperties(SearchParams searchParams, Integer pageNumber) {
         if(searchParams.getStartPrice() == null) {
             searchParams.setStartPrice(START_PRICE);
         }
@@ -74,7 +84,7 @@ public class ProductServiceImpl implements ProductService {
             searchParams.setFinalPrice(FINAL_PRICE);
         }
 
-        return productRepository.getProductBySearch(searchParams, pageRequest(pageNumber));
+        return productRepository.productBySearch(searchParams, pageRequest(pageNumber));
     }
 
     private Pageable pageRequest(Integer pageNumber) {

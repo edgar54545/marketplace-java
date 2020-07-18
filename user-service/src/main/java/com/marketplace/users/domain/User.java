@@ -22,10 +22,11 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
+    @NotBlank(message = "Invalid username.")
+    @Column(name = "full_name")
     private String fullName;
 
-    @NotBlank
+    @NotBlank(message = "Invalid username.")
     @Size(min = 4, max = 20)
     @Column(name = "user_name")
     private String userName;
@@ -33,7 +34,7 @@ public class User {
     @NotBlank
     private String password;
 
-    @Email
+    @Email(message = "Invalid e-mail.")
     @Column(unique = true)
     private String email;
 

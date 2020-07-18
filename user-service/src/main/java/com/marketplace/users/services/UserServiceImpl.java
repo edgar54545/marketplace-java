@@ -27,4 +27,9 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByUserName(userName).orElseThrow(RuntimeException::new);
         return UserDto.fromUser(user);
     }
+
+    @Override
+    public void update(String username, UserDto userDto) {
+        userRepository.save(UserDto.toUser(userDto));
+    }
 }

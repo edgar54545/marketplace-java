@@ -19,12 +19,12 @@ public class ProductRepositoryImpl implements ProductRepository {
     private final MongoTemplate mongoTemplate;
 
     @Override
-    public Product addProduct(Product product) {
+    public Product add(Product product) {
         return mongoTemplate.save(product);
     }
 
     @Override
-    public Product getProductById(String productId) {
+    public Product productById(String productId) {
         Query query = new Query();
         query.addCriteria(Criteria.where("_id").is(productId));
 
@@ -32,7 +32,21 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public Product getProductByName(String name, String ownerId) {
+    public Product update(String id, Product product) {
+        product.setId(id);
+        return mongoTemplate.save(product);
+    }
+
+    @Override
+    public void delete(String id) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("_id").is(id));
+
+        mongoTemplate.remove(query, Product.class);
+    }
+
+    @Override
+    public Product productByName(String name, String ownerId) {
         Query query = new Query();
         query.addCriteria(Criteria.where("name").is(name)
                 .and("ownerId").is(ownerId));
@@ -41,7 +55,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public List<Product> getProductsByCategory(Category category, Pageable pageable) {
+    public List<Product> productsByCategory(Category category, Pageable pageable) {
         Query query = new Query();
         query.addCriteria(Criteria.where("category").is(category))
                 .with(pageable);
@@ -50,7 +64,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public List<Product> getProductsByOwnerUserName(String ownerUserName, Pageable pageable) {
+    public List<Product> productsByOwnerUserName(String ownerUserName, Pageable pageable) {
         Query query = new Query();
         query.addCriteria(Criteria.where("ownerUserName").is(ownerUserName))
                 .with(pageable);
@@ -59,7 +73,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public List<Product> getProductBySearch(SearchParams searchParams, Pageable pageRequest) {
+    public List<Product> productBySearch(SearchParams searchParams, Pageable pageRequest) {
         Criteria searchCriteria = Criteria.where("price").gt(searchParams.getStartPrice())
                 .lte(searchParams.getFinalPrice());
 

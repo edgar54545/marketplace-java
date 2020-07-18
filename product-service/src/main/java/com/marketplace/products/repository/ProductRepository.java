@@ -8,15 +8,19 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface ProductRepository {
-    Product addProduct(Product product);
+    Product add(Product product);
 
-    Product getProductById(String productId);
+    Product productById(String productId);
 
-    Product getProductByName(String name, String ownerId);
+    Product update(String id, Product product);
 
-    List<Product> getProductsByCategory(Category category, Pageable pageable);
+    void delete(String id);
 
-    List<Product> getProductsByOwnerUserName(String ownerId, Pageable pageable);
+    Product productByName(String name, String ownerId);
 
-    List<Product> getProductBySearch(SearchParams searchParams, Pageable pageRequest);
+    List<Product> productsByCategory(Category category, Pageable pageable);
+
+    List<Product> productsByOwnerUserName(String ownerId, Pageable pageable);
+
+    List<Product> productBySearch(SearchParams searchParams, Pageable pageRequest);
 }
