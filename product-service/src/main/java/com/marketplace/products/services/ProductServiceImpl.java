@@ -5,7 +5,7 @@ import com.marketplace.products.domain.Product;
 import com.marketplace.products.domain.Status;
 import com.marketplace.products.repository.ProductRepository;
 import com.marketplace.products.web.errors_handle.EntityNotFoundException;
-import com.marketplace.products.web.model.SearchParams;
+import com.marketplace.products.web.model.SearchRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -75,16 +75,16 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> productsBySearchProperties(SearchParams searchParams, Integer pageNumber) {
-        if(searchParams.getStartPrice() == null) {
-            searchParams.setStartPrice(START_PRICE);
+    public List<Product> productsBySearchProperties(SearchRequest searchRequest, Integer pageNumber) {
+        if (searchRequest.getStartPrice() == null) {
+            searchRequest.setStartPrice(START_PRICE);
         }
 
-        if (searchParams.getFinalPrice() == null) {
-            searchParams.setFinalPrice(FINAL_PRICE);
+        if (searchRequest.getFinalPrice() == null) {
+            searchRequest.setFinalPrice(FINAL_PRICE);
         }
 
-        return productRepository.productBySearch(searchParams, pageRequest(pageNumber));
+        return productRepository.productBySearch(searchRequest, pageRequest(pageNumber));
     }
 
     private Pageable pageRequest(Integer pageNumber) {

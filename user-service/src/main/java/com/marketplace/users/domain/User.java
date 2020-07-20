@@ -26,8 +26,8 @@ public class User {
     @Column(name = "full_name")
     private String fullName;
 
-    @NotBlank(message = "Invalid username.")
-    @Size(min = 4, max = 20)
+    @NotBlank(message = "Invalid username")
+    @Size(min = 4, max = 25)
     @Column(name = "user_name")
     private String userName;
 

@@ -2,7 +2,7 @@ package com.marketplace.products.repository;
 
 import com.marketplace.products.domain.Category;
 import com.marketplace.products.domain.Product;
-import com.marketplace.products.web.model.SearchParams;
+import com.marketplace.products.web.model.SearchRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -22,5 +22,5 @@ public interface ProductRepository {
 
     List<Product> productsByOwnerUserName(String ownerId, Pageable pageable);
 
-    List<Product> productBySearch(SearchParams searchParams, Pageable pageRequest);
+    List<Product> productBySearch(SearchRequest searchRequest, Pageable pageRequest);
 }

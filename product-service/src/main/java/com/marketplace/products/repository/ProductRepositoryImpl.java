@@ -2,7 +2,7 @@ package com.marketplace.products.repository;
 
 import com.marketplace.products.domain.Category;
 import com.marketplace.products.domain.Product;
-import com.marketplace.products.web.model.SearchParams;
+import com.marketplace.products.web.model.SearchRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -73,16 +73,16 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public List<Product> productBySearch(SearchParams searchParams, Pageable pageRequest) {
-        Criteria searchCriteria = Criteria.where("price").gt(searchParams.getStartPrice())
-                .lte(searchParams.getFinalPrice());
+    public List<Product> productBySearch(SearchRequest searchRequest, Pageable pageRequest) {
+        Criteria searchCriteria = Criteria.where("price").gt(searchRequest.getStartPrice())
+                .lte(searchRequest.getFinalPrice());
 
-        if(searchParams.getCategory() != null) {
-            searchCriteria.and("category").is(searchParams.getCategory());
+        if (searchRequest.getCategory() != null) {
+            searchCriteria.and("category").is(searchRequest.getCategory());
         }
 
-        if(!CollectionUtils.isEmpty(searchParams.getTags())) {
-            searchCriteria.and("tags").in(searchParams.getTags());
+        if (!CollectionUtils.isEmpty(searchRequest.getTags())) {
+            searchCriteria.and("tags").in(searchRequest.getTags());
         }
 
         Query query = new Query();

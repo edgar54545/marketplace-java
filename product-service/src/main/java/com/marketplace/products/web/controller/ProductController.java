@@ -3,7 +3,7 @@ package com.marketplace.products.web.controller;
 import com.marketplace.products.domain.Category;
 import com.marketplace.products.domain.Product;
 import com.marketplace.products.services.ProductService;
-import com.marketplace.products.web.model.SearchParams;
+import com.marketplace.products.web.model.SearchRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -63,8 +63,8 @@ public class ProductController {
     }
 
     @GetMapping(value = "search")
-    public ResponseEntity<List<Product>> productsBySearch(SearchParams searchParams, Integer pageNumber) {
+    public ResponseEntity<List<Product>> productsBySearch(SearchRequest searchRequest, Integer pageNumber) {
 
-        return ResponseEntity.ok(productService.productsBySearchProperties(searchParams, pageNumber));
+        return ResponseEntity.ok(productService.productsBySearchProperties(searchRequest, pageNumber));
     }
 }

@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Data
-public class SearchParams {
+public class SearchRequest {
     private BigDecimal startPrice;
     private BigDecimal finalPrice;
     private Category category;

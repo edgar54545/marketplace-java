@@ -2,7 +2,7 @@ package com.marketplace.products.services;
 
 import com.marketplace.products.domain.Category;
 import com.marketplace.products.domain.Product;
-import com.marketplace.products.web.model.SearchParams;
+import com.marketplace.products.web.model.SearchRequest;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ public interface ProductService {
 
     List<Product> productsByOwnerUserName(String ownerUserName, Integer pageNumber);
 
-    List<Product> productsBySearchProperties(SearchParams searchParams, Integer pageNumber);
+    List<Product> productsBySearchProperties(SearchRequest searchRequest, Integer pageNumber);
 
     void delete(String id);
 }
