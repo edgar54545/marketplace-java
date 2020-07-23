@@ -4,12 +4,15 @@ import com.marketplace.products.domain.Category;
 import com.marketplace.products.domain.Product;
 import com.marketplace.products.domain.Status;
 import com.marketplace.products.repository.ProductRepository;
-import com.marketplace.products.web.errors_handle.EntityNotFoundException;
+import com.marketplace.products.web.errors_handle.NotFoundException;
+import com.marketplace.products.web.model.ProductRequest;
 import com.marketplace.products.web.model.SearchRequest;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -26,24 +29,33 @@ public class ProductServiceImpl implements ProductService {
     private static final BigDecimal FINAL_PRICE = BigDecimal.valueOf(Integer.MAX_VALUE);
 
     private final ProductRepository productRepository;
+    private final ModelMapper productRequestToProductMapper;
+    private final ImageService imageService;
 
     @Override
-    public Product add(Product product) {
+    public String add(ProductRequest productRequest, List<MultipartFile> multipartFiles) {
+        Product product = productRequestToProductMapper.map(productRequest, Product.class);
         product.setCreatedDate(LocalDateTime.now());
         product.setStatus(Status.PENDING);
+        product.setPictures(imageService.saveImages(multipartFiles));
 
-        return productRepository.add(product);
+        return productRepository.add(product).getId();
     }
 
     @Override
     public Product productById(String productId) {
         Optional<Product> productOpt = Optional.ofNullable(productRepository.productById(productId));
 
-        return productOpt.orElseThrow(() -> new EntityNotFoundException(productId));
+        return productOpt.orElseThrow(() -> new NotFoundException(productId));
     }
 
     @Override
-    public Product update(String id, Product product) {
+    public Product update(String id, ProductRequest productRequest, List<MultipartFile> multipartFiles)
+    {
+        Product product = productRequestToProductMapper.map(productRequest, Product.class);
+        product.setLastModifiedDate(LocalDateTime.now());
+        product.setPictures(imageService.saveImages(multipartFiles));
+
         return productRepository.update(id, product);
     }
 
@@ -59,7 +71,7 @@ public class ProductServiceImpl implements ProductService {
 
         Optional<Product> productOpt = Optional.ofNullable(productRepository.productByName(name, ownerId));
 
-        return productOpt.orElseThrow(() -> new EntityNotFoundException(name));
+        return productOpt.orElseThrow(() -> new NotFoundException(name));
     }
 
     @Override

@@ -3,12 +3,16 @@ package com.marketplace.products.web.controller;
 import com.marketplace.products.domain.Category;
 import com.marketplace.products.domain.Product;
 import com.marketplace.products.services.ProductService;
+import com.marketplace.products.web.model.ProductRequest;
 import com.marketplace.products.web.model.SearchRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
@@ -19,15 +23,16 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "api/v1/products/")
-@Validated
 public class ProductController {
     private final ProductService productService;
 
-    @PostMapping(value = "add")
-    public ResponseEntity addProduct(@RequestBody @Valid Product product, UriComponentsBuilder uriBuilder) {
-        Product createdProduct = productService.add(product);
-        URI location = uriBuilder.path("api/v1/products/{id}")
-                .buildAndExpand(createdProduct.getId())
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity save(@RequestPart(value = "product") @Valid ProductRequest productRequest,
+                                     @RequestPart(value = "files", required = false) List<MultipartFile> multipartFiles) {
+
+        String createdProductId = productService.add(productRequest, multipartFiles);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("{id}")
+                .buildAndExpand(createdProductId)
                 .toUri();
 
         return ResponseEntity.created(location).build();
@@ -35,8 +40,9 @@ public class ProductController {
 
     @PutMapping(value = "{id}/update")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@PathVariable String id, @RequestBody @Valid Product product) {
-        productService.update(id, product);
+    public void update(@PathVariable String id, @RequestPart(value = "product") @Valid ProductRequest productRequest,
+                       @RequestPart(value = "file", required = false) List<MultipartFile> multipartFiles) {
+        productService.update(id, productRequest, multipartFiles);
     }
 
     @DeleteMapping(value = "{id}/delete")
@@ -45,9 +51,9 @@ public class ProductController {
         productService.delete(id);
     }
 
-    @GetMapping(value = "{productId}")
-    public ResponseEntity<Product> product(@PathVariable String productId) {
-        return ResponseEntity.ok(productService.productById(productId));
+    @GetMapping(value = "{id}")
+    public ResponseEntity<Product> product(@PathVariable String id) {
+        return ResponseEntity.ok(productService.productById(id));
     }
 
     @GetMapping(value = "{ownerUserName}")
@@ -57,7 +63,7 @@ public class ProductController {
     }
 
     @GetMapping(value = "{category}")
-    public ResponseEntity<List<Product>> productById(@PathVariable @NotNull Category category,
+    public ResponseEntity<List<Product>> productById(@PathVariable Category category,
                                                      @RequestParam Integer pageNumber) {
         return ResponseEntity.ok(productService.productsByCategory(category, pageNumber));
     }

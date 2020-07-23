@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.Optional;
 
 public interface UserService {
-    User addUser(UserDto userDto);
+    String addUser(UserDto userDto);
 
     UserDto getUserByUserName(String username);
 

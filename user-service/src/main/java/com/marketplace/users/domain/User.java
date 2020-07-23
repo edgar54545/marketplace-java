@@ -1,14 +1,19 @@
 package com.marketplace.users.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -22,26 +27,28 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Invalid username.")
-    @Column(name = "full_name")
+    @CreationTimestamp
+    private LocalDateTime createdDate;
+
+    @UpdateTimestamp
+    private LocalDateTime lastModifiedDate;
+
+    @Column(name = "full_name", nullable = false)
     private String fullName;
 
-    @NotBlank(message = "Invalid username")
-    @Size(min = 4, max = 25)
-    @Column(name = "user_name")
-    private String userName;
+    @Column(unique = true)
+    private String username;
 
-    @NotBlank
     private String password;
 
-    @Email(message = "Invalid e-mail.")
-    @Column(unique = true)
+    @Email(message = "Invalid e-mail")
+    @Column(unique = true, nullable = false)
     private String email;
 
-    @NotBlank
     @Column(unique = true)
     private String phone;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private ROLE role;
 }

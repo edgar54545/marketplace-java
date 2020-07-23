@@ -5,25 +5,16 @@ import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.DeleteObjectsRequest;
-import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.services.s3.model.PutObjectResult;
+import com.amazonaws.services.s3.model.*;
 import com.marketplace.images.config.S3Config;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.joda.time.DateTime;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
 import java.util.List;
@@ -45,45 +36,41 @@ public class S3Service {
                 .build();
     }
 
-    private File convertMultiPartToFile(MultipartFile file) throws IOException {
-        File convFile = new File(file.getOriginalFilename());
-        FileOutputStream fos = new FileOutputStream(convFile);
-        fos.write(file.getBytes());
-        fos.close();
-        return convFile;
-    }
-
     private String generateFileName(MultipartFile multiPart) {
         return new Date().getTime() + "-" + multiPart.getOriginalFilename().replace(" ", "_");
     }
 
-    private void uploadFileTos3bucket(String fileName, File file) {
-        s3client.putObject(new PutObjectRequest(s3Config.getBucketName(), fileName, file)
-                .withCannedAcl(CannedAccessControlList.PublicRead));
+    private void uploadFileTos3bucket(String fileName, MultipartFile file) throws IOException {
+            s3client.putObject(new PutObjectRequest(s3Config.getBucketName(), fileName, file.getInputStream(),
+                    new ObjectMetadata())
+                    .withCannedAcl(CannedAccessControlList.PublicRead));
     }
 
-    public URL uploadFile(MultipartFile multipartFile) {
+    public URL uploadImage(MultipartFile file) {
         try {
-            File file = convertMultiPartToFile(multipartFile);
-            String fileName = generateFileName(multipartFile);
+            String fileName = generateFileName(file);
             uploadFileTos3bucket(fileName, file);
-            file.delete();
             return new URL(s3Config.getEndpointUrl() + "/" + s3Config.getBucketName() + "/" + fileName);
         } catch (Exception e) {
-            log.error("Error occured during saving image: {}", e.getMessage());
+            log.error("Error occurred during saving image: {}", e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
     }
 
-    public void deleteFile(String key) {
-        s3client.deleteObject(s3Config.getBucketName(), key);
+    public void deleteImage(String fileUrl) {
+        s3client.deleteObject(s3Config.getBucketName(), nameFromUrl(fileUrl));
     }
 
-    public void deleteFiles(List<String> keys) {
+    public void deleteImage(List<String> fileUrls) {
         s3client.deleteObjects(new DeleteObjectsRequest(s3Config.getBucketName())
-                .withKeys(keys.stream()
+                .withKeys(fileUrls.stream()
+                        .map(this::nameFromUrl)
                         .map(key -> new DeleteObjectsRequest.KeyVersion(key, null))
                         .collect(Collectors.toList()))
         );
+    }
+
+    private String nameFromUrl(String fileUrl) {
+        return fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
     }
 }

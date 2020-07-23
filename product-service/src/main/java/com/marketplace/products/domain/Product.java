@@ -38,7 +38,6 @@ public class Product {
     @Size(min = 4, max = 25, message = "username length must be longer than 4 and shorter than 25 characters")
     private String ownerUserName;
 
-    @Indexed
     @NotBlank(message = "Invalid name")
     private String name;
 

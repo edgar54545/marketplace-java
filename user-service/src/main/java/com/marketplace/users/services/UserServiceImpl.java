@@ -3,11 +3,12 @@ package com.marketplace.users.services;
 import com.marketplace.users.domain.ROLE;
 import com.marketplace.users.domain.User;
 import com.marketplace.users.repository.UserRepository;
+import com.marketplace.users.web.error_handle.NotFoundException;
 import com.marketplace.users.web.model.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -15,21 +16,24 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    public User addUser(UserDto userDto) {
+    public String addUser(UserDto userDto) {
         User user = UserDto.toUser(userDto);
+        user.setCreatedDate(LocalDateTime.now());
         user.setRole(ROLE.COMMON);
 
-        return userRepository.save(user);
+        return userRepository.save(user).getUsername();
     }
 
     @Override
     public UserDto getUserByUserName(String userName) {
-        User user = userRepository.findByUserName(userName).orElseThrow(RuntimeException::new);
+        User user = userRepository.findByUsername(userName).orElseThrow(() -> new NotFoundException(userName));
         return UserDto.fromUser(user);
     }
 
     @Override
     public void update(String username, UserDto userDto) {
+        User user = UserDto.toUser(userDto);
+        user.setLastModifiedDate(LocalDateTime.now());
         userRepository.save(UserDto.toUser(userDto));
     }
 }
