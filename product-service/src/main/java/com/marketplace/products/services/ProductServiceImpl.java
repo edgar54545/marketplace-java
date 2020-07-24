@@ -50,8 +50,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product update(String id, ProductRequest productRequest, List<MultipartFile> multipartFiles)
-    {
+    public Product update(String id, ProductRequest productRequest, List<MultipartFile> multipartFiles) {
         Product product = productRequestToProductMapper.map(productRequest, Product.class);
         product.setLastModifiedDate(LocalDateTime.now());
         product.setPictures(imageService.saveImages(multipartFiles));

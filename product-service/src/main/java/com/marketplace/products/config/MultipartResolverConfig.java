@@ -19,7 +19,7 @@ public class MultipartResolverConfig {
                     return false;
                 }
                 String contentType = request.getContentType();
-                return (contentType != null &&contentType.toLowerCase().startsWith("multipart/"));
+                return (contentType != null && contentType.toLowerCase().startsWith("multipart/"));
             }
         };
     }

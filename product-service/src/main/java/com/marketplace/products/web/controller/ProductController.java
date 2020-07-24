@@ -28,7 +28,7 @@ public class ProductController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity save(@RequestPart(value = "product") @Valid ProductRequest productRequest,
-                                     @RequestPart(value = "files", required = false) List<MultipartFile> multipartFiles) {
+                               @RequestPart(value = "files", required = false) List<MultipartFile> multipartFiles) {
 
         String createdProductId = productService.add(productRequest, multipartFiles);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("{id}")

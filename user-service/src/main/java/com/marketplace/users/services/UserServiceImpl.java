@@ -18,7 +18,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public String addUser(UserDto userDto) {
         User user = UserDto.toUser(userDto);
-        user.setCreatedDate(LocalDateTime.now());
         user.setRole(ROLE.COMMON);
 
         return userRepository.save(user).getUsername();
@@ -32,8 +31,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void update(String username, UserDto userDto) {
-        User user = UserDto.toUser(userDto);
-        user.setLastModifiedDate(LocalDateTime.now());
         userRepository.save(UserDto.toUser(userDto));
     }
 }

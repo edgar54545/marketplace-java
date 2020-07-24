@@ -33,7 +33,7 @@ public class User {
     @UpdateTimestamp
     private LocalDateTime lastModifiedDate;
 
-    @Column(name = "full_name", nullable = false)
+    @Column(nullable = false)
     private String fullName;
 
     @Column(unique = true)

@@ -41,9 +41,9 @@ public class S3Service {
     }
 
     private void uploadFileTos3bucket(String fileName, MultipartFile file) throws IOException {
-            s3client.putObject(new PutObjectRequest(s3Config.getBucketName(), fileName, file.getInputStream(),
-                    new ObjectMetadata())
-                    .withCannedAcl(CannedAccessControlList.PublicRead));
+        s3client.putObject(new PutObjectRequest(s3Config.getBucketName(), fileName, file.getInputStream(),
+                new ObjectMetadata())
+                .withCannedAcl(CannedAccessControlList.PublicRead));
     }
 
     public URL uploadImage(MultipartFile file) {
