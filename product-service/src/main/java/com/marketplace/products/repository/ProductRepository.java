@@ -22,5 +22,5 @@ public interface ProductRepository {
 
     List<Product> productsByOwnerUserName(String ownerId, Pageable pageable);
 
-    List<Product> productBySearch(SearchRequest searchRequest, Pageable pageRequest);
+    List<Product> productsBySearch(SearchRequest searchRequest, Pageable pageRequest);
 }

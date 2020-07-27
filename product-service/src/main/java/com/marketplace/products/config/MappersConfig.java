@@ -26,6 +26,11 @@ public class MappersConfig {
         return modelMapper;
     }
 
+    @Bean
+    public ModelMapper productToProductResponseMapper() {
+        return configuredMapper();
+    }
+
     private ModelMapper configuredMapper() {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration()

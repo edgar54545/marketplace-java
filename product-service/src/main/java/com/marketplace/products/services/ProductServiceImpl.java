@@ -6,6 +6,7 @@ import com.marketplace.products.domain.Status;
 import com.marketplace.products.repository.ProductRepository;
 import com.marketplace.products.web.errors_handle.NotFoundException;
 import com.marketplace.products.web.model.ProductRequest;
+import com.marketplace.products.web.model.ProductResponse;
 import com.marketplace.products.web.model.SearchRequest;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -20,6 +21,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import static java.util.stream.Collectors.toUnmodifiableList;
+
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
@@ -30,7 +33,8 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final ModelMapper productRequestToProductMapper;
-    private final ImageService imageService;
+    private final ModelMapper productToProductResponseMapper;
+    private final ImageServiceImpl imageService;
 
     @Override
     public String add(ProductRequest productRequest, List<MultipartFile> multipartFiles) {
@@ -43,19 +47,21 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product productById(String productId) {
-        Optional<Product> productOpt = Optional.ofNullable(productRepository.productById(productId));
+    public ProductResponse productById(String productId) {
+        Product product = Optional.ofNullable(productRepository.productById(productId))
+                .orElseThrow(() -> new NotFoundException(productId));
 
-        return productOpt.orElseThrow(() -> new NotFoundException(productId));
+        return productToProductResponseMapper.map(product, ProductResponse.class);
     }
 
     @Override
-    public Product update(String id, ProductRequest productRequest, List<MultipartFile> multipartFiles) {
+    public ProductResponse update(String id, ProductRequest productRequest, List<MultipartFile> multipartFiles) {
         Product product = productRequestToProductMapper.map(productRequest, Product.class);
         product.setLastModifiedDate(LocalDateTime.now());
         product.setPictures(imageService.saveImages(multipartFiles));
+        Product updatedProduct = productRepository.update(id, product);
 
-        return productRepository.update(id, product);
+        return productToProductResponseMapper.map(updatedProduct, ProductResponse.class);
     }
 
     @Override
@@ -64,29 +70,31 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product getProductByName(String name, String ownerId) {
-        Objects.requireNonNull(name);
-        Objects.requireNonNull(ownerId);
+    public ProductResponse getProductByName(String name, String ownerId) {
+        Product product = Optional.ofNullable(productRepository.productByName(name, ownerId))
+                .orElseThrow(() -> new NotFoundException(name));
 
-        Optional<Product> productOpt = Optional.ofNullable(productRepository.productByName(name, ownerId));
-
-        return productOpt.orElseThrow(() -> new NotFoundException(name));
+        return productToProductResponseMapper.map(product, ProductResponse.class);
     }
 
     @Override
-    public List<Product> productsByCategory(Category category, Integer pageNumber) {
+    public List<ProductResponse> productsByCategory(Category category, Integer pageNumber) {
         Objects.requireNonNull(category);
 
-        return productRepository.productsByCategory(category, pageRequest(pageNumber));
+        return productRepository.productsByCategory(category, pageRequest(pageNumber)).stream()
+                .map(product -> productToProductResponseMapper.map(product, ProductResponse.class))
+                .collect(toUnmodifiableList());
     }
 
     @Override
-    public List<Product> productsByOwnerUserName(String ownerUserName, Integer pageNumber) {
-        return productRepository.productsByOwnerUserName(ownerUserName, pageRequest(pageNumber));
+    public List<ProductResponse> productsByOwnerUserName(String ownerUserName, Integer pageNumber) {
+        return productRepository.productsByOwnerUserName(ownerUserName, pageRequest(pageNumber)).stream()
+                .map(product -> productToProductResponseMapper.map(product, ProductResponse.class))
+                .collect(toUnmodifiableList());
     }
 
     @Override
-    public List<Product> productsBySearchProperties(SearchRequest searchRequest, Integer pageNumber) {
+    public List<ProductResponse> productsBySearchProperties(SearchRequest searchRequest, Integer pageNumber) {
         if (searchRequest.getStartPrice() == null) {
             searchRequest.setStartPrice(START_PRICE);
         }
@@ -95,7 +103,9 @@ public class ProductServiceImpl implements ProductService {
             searchRequest.setFinalPrice(FINAL_PRICE);
         }
 
-        return productRepository.productBySearch(searchRequest, pageRequest(pageNumber));
+        return productRepository.productsBySearch(searchRequest, pageRequest(pageNumber)).stream()
+                .map(product -> productToProductResponseMapper.map(product, ProductResponse.class))
+                .collect(toUnmodifiableList());
     }
 
     private Pageable pageRequest(Integer pageNumber) {

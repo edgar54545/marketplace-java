@@ -74,7 +74,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public List<Product> productBySearch(SearchRequest searchRequest, Pageable pageRequest) {
+    public List<Product> productsBySearch(SearchRequest searchRequest, Pageable pageRequest) {
         Criteria searchCriteria = Criteria.where(Constants.PRICE).gt(searchRequest.getStartPrice())
                 .lte(searchRequest.getFinalPrice());
 
