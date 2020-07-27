@@ -6,6 +6,7 @@ import com.marketplace.products.services.ProductService;
 import com.marketplace.products.web.model.ProductRequest;
 import com.marketplace.products.web.model.SearchRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cloud.netflix.eureka.EurekaDiscoveryClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

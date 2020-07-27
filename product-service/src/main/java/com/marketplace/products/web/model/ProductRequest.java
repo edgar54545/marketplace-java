@@ -1,5 +1,6 @@
 package com.marketplace.products.web.model;
 
+import com.marketplace.products.constants.Constants;
 import com.marketplace.products.domain.Category;
 import lombok.Data;
 
@@ -9,18 +10,18 @@ import java.util.Set;
 
 @Data
 public class ProductRequest {
-    @NotNull(message = "Invalid username")
-    @Size(min = 4, max = 25, message = "username length must be longer than 4 and shorter than 25 characters")
+    @NotNull(message = Constants.INVALID_USERNAME)
+    @Size(min = 4, max = 25, message = Constants.INVALID_USERNAME_SIZE)
     private String ownerUserName;
 
-    @NotBlank(message = "Invalid name")
+    @NotBlank(message = Constants.INVALID_NAME)
     private String name;
 
-    @NotNull
+    @NotNull(message = Constants.INVALID_CATEGORY)
     private Category category;
 
-    @NotNull(message = "Invalid price")
-    @Min(value = 0, message = "Invalid price")
+    @NotNull(message = Constants.INVALID_PRICE)
+    @Min(value = 0, message = Constants.INVALID_PRICE)
     private BigDecimal price;
     private String description;
     private Set<String> tags;

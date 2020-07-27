@@ -1,5 +1,6 @@
 package com.marketplace.products.repository;
 
+import com.marketplace.products.constants.Constants;
 import com.marketplace.products.domain.Category;
 import com.marketplace.products.domain.Product;
 import com.marketplace.products.web.model.SearchRequest;
@@ -26,7 +27,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     @Override
     public Product productById(String productId) {
         Query query = new Query();
-        query.addCriteria(Criteria.where("_id").is(productId));
+        query.addCriteria(Criteria.where(Constants.ID).is(productId));
 
         return mongoTemplate.findOne(query, Product.class);
     }
@@ -40,7 +41,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     @Override
     public void delete(String id) {
         Query query = new Query();
-        query.addCriteria(Criteria.where("_id").is(id));
+        query.addCriteria(Criteria.where(Constants.ID).is(id));
 
         mongoTemplate.remove(query, Product.class);
     }
@@ -48,8 +49,8 @@ public class ProductRepositoryImpl implements ProductRepository {
     @Override
     public Product productByName(String name, String ownerId) {
         Query query = new Query();
-        query.addCriteria(Criteria.where("name").is(name)
-                .and("ownerId").is(ownerId));
+        query.addCriteria(Criteria.where(Constants.NAME).is(name)
+                .and(Constants.OWNER_ID).is(ownerId));
 
         return mongoTemplate.findOne(query, Product.class);
     }
@@ -57,7 +58,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     @Override
     public List<Product> productsByCategory(Category category, Pageable pageable) {
         Query query = new Query();
-        query.addCriteria(Criteria.where("category").is(category))
+        query.addCriteria(Criteria.where(Constants.CATEGORY).is(category))
                 .with(pageable);
 
         return mongoTemplate.find(query, Product.class);
@@ -66,7 +67,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     @Override
     public List<Product> productsByOwnerUserName(String ownerUserName, Pageable pageable) {
         Query query = new Query();
-        query.addCriteria(Criteria.where("ownerUserName").is(ownerUserName))
+        query.addCriteria(Criteria.where(Constants.OWNER_USERNAME).is(ownerUserName))
                 .with(pageable);
 
         return mongoTemplate.find(query, Product.class);
@@ -74,15 +75,15 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public List<Product> productBySearch(SearchRequest searchRequest, Pageable pageRequest) {
-        Criteria searchCriteria = Criteria.where("price").gt(searchRequest.getStartPrice())
+        Criteria searchCriteria = Criteria.where(Constants.PRICE).gt(searchRequest.getStartPrice())
                 .lte(searchRequest.getFinalPrice());
 
         if (searchRequest.getCategory() != null) {
-            searchCriteria.and("category").is(searchRequest.getCategory());
+            searchCriteria.and(Constants.CATEGORY).is(searchRequest.getCategory());
         }
 
         if (!CollectionUtils.isEmpty(searchRequest.getTags())) {
-            searchCriteria.and("tags").in(searchRequest.getTags());
+            searchCriteria.and(Constants.TAGS).in(searchRequest.getTags());
         }
 
         Query query = new Query();

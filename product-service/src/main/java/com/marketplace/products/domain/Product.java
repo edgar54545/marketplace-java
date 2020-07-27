@@ -34,18 +34,9 @@ public class Product {
     private LocalDateTime lastModifiedDate;
 
     @Indexed
-    @NotNull(message = "Invalid username")
-    @Size(min = 4, max = 25, message = "username length must be longer than 4 and shorter than 25 characters")
-    private String ownerUserName;
-
-    @NotBlank(message = "Invalid name")
+    private String ownerUsername;
     private String name;
-
-    @NotNull
     private Category category;
-
-    @NotNull(message = "Invalid price")
-    @Min(value = 0, message = "Invalid price")
     private BigDecimal price;
     private List<URL> pictures;
     private String description;
