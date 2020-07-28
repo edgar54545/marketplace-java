@@ -1,15 +1,12 @@
 package com.marketplace.users.web;
 
-import com.marketplace.users.domain.User;
 import com.marketplace.users.services.UserService;
 import com.marketplace.users.web.model.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -18,10 +15,9 @@ import java.net.URI;
 @RequestMapping(value = "api/v1/users")
 @RestController
 public class Controller {
-
     private final UserService userService;
 
-    @PostMapping(value = {"/", ""})
+    @PostMapping(value = {"/sign-up"})
     public ResponseEntity save(@RequestBody @Valid UserDto userDto) {
         String createdUserUsername = userService.addUser(userDto);
 
@@ -33,16 +29,16 @@ public class Controller {
                 .build();
     }
 
-    @GetMapping(value = "/{userName}")
-    public ResponseEntity<UserDto> get(@PathVariable String userName) {
-        UserDto user = userService.getUserByUserName(userName);
+    @GetMapping(value = "/{username}")
+    public ResponseEntity<UserDto> get(@PathVariable String username) {
+        UserDto user = userService.getUserByUserName(username);
 
         return ResponseEntity.ok(user);
     }
 
-    @PutMapping(value = "/{userName}")
+    @PutMapping(value = "/{username}/update")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@PathVariable String userName, @RequestBody @Valid UserDto userDto) {
-        userService.update(userName, userDto);
+    public void update(@PathVariable String username, @RequestBody @Valid UserDto userDto) {
+        userService.update(username, userDto);
     }
 }

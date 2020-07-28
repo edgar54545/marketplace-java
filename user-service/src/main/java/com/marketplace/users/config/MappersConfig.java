@@ -1,6 +1,6 @@
 package com.marketplace.users.config;
 
-import com.marketplace.users.domain.User;
+import com.marketplace.users.domain.UserEntity;
 import com.marketplace.users.web.model.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.Converter;
@@ -16,8 +16,8 @@ public class MappersConfig {
 
     @Bean
     public ModelMapper userToUserDto() {
-        ModelMapper modelMapper = configuredMapper();
-        modelMapper.typeMap(User.class, UserDto.class)
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.typeMap(UserEntity.class, UserDto.class)
                 .addMappings(mapping -> mapping.skip(UserDto::setPassword));
 
         return modelMapper;
@@ -25,26 +25,17 @@ public class MappersConfig {
 
     @Bean
     public ModelMapper userDtoToUser() {
-        ModelMapper modelMapper = configuredMapper();
+        ModelMapper modelMapper = new ModelMapper();
         Converter<String, String> passwordEncoder = context -> bCryptPasswordEncoder.encode(context.getSource());
-        modelMapper.typeMap(UserDto.class, User.class)
+        modelMapper.typeMap(UserDto.class, UserEntity.class)
                 .addMappings(mapping -> {
-                    mapping.skip(User::setCreatedDate);
-                    mapping.skip(User::setId);
-                    mapping.skip(User::setLastModifiedDate);
-                    mapping.skip(User::setRole);
+                    mapping.skip(UserEntity::setCreatedDate);
+                    mapping.skip(UserEntity::setId);
+                    mapping.skip(UserEntity::setLastModifiedDate);
+                    mapping.skip(UserEntity::setRole);
                 })
                 .addMappings(mapping -> mapping.using(passwordEncoder)
-                        .map(UserDto::getPassword, User::setBCryptPassword));
-
-        return modelMapper;
-    }
-
-    private ModelMapper configuredMapper() {
-        ModelMapper modelMapper = new ModelMapper();
-        modelMapper.getConfiguration()
-                .setFieldMatchingEnabled(true)
-                .setFieldAccessLevel(org.modelmapper.config.Configuration.AccessLevel.PRIVATE);
+                        .map(UserDto::getPassword, UserEntity::setBCryptPassword));
 
         return modelMapper;
     }
