@@ -1,6 +1,5 @@
 package com.marketplace.users.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,10 +8,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @Data
@@ -39,9 +34,8 @@ public class User {
     @Column(unique = true)
     private String username;
 
-    private String password;
+    private String bCryptPassword;
 
-    @Email(message = "Invalid e-mail")
     @Column(unique = true, nullable = false)
     private String email;
 

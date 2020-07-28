@@ -1,6 +1,6 @@
 package com.marketplace.users.web.model;
 
-import com.marketplace.users.domain.User;
+import com.marketplace.users.constants.Constants;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,40 +15,21 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @Builder
 public class UserDto {
-    @NotBlank(message = "Invalid Name.")
-    @Size(min = 3, max = 25, message = "Name require more than 3 and less than 25 characters")
+    @NotBlank(message = Constants.INVALID_NAME)
+    @Size(min = 3, max = 25, message = Constants.INVALID_NAME_SIZE)
     private String fullName;
 
-    @NotBlank(message = "Invalid username")
-    @Size(min = 4, max = 25, message = "Username require more than 4 and less than 25 characters")
+    @NotBlank(message = Constants.BLANK_USERNAME)
+    @Size(min = 4, max = 25, message = Constants.INVALID_USERNAME_SIZE)
     private String username;
 
-    @NotBlank(message = "Password can't be blank")
-    @Size(message = "Minimum 5 characters required for password", min = 5)
+    @NotBlank(message = Constants.BLANK_PASSWORD)
+    @Size(min = 5, message = Constants.INVALID_PASSWORD_SIZE)
     private String password;
 
-    @Email(message = "Invalid e-mail")
+    @NotBlank(message = Constants.BLANK_EMAIL)
+    @Email(message = Constants.INVALID_EMAIL)
     private String email;
     private String phone;
-
-    public static User toUser(UserDto userDto) {
-        return User.builder()
-                .fullName(userDto.getFullName())
-                .username(userDto.getUsername())
-                .email(userDto.getEmail())
-                .phone(userDto.getPhone())
-                .password(userDto.getPassword())
-                .build();
-    }
-
-    public static UserDto fromUser(User user) {
-        return UserDto.builder()
-                .fullName(user.getFullName())
-                .username(user.getUsername())
-                .email(user.getEmail())
-                .phone(user.getPhone())
-                .password(user.getPassword())
-                .build();
-    }
 }
 

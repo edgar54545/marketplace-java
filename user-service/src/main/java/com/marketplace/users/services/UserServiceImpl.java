@@ -6,19 +6,20 @@ import com.marketplace.users.repository.UserRepository;
 import com.marketplace.users.web.error_handle.NotFoundException;
 import com.marketplace.users.web.model.UserDto;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final ModelMapper userToUserDto;
+    private final ModelMapper userDtoToUser;
 
     @Override
     public String addUser(UserDto userDto) {
-        User user = UserDto.toUser(userDto);
-        user.setRole(ROLE.COMMON);
+        User user = userDtoToUser.map(userDto, User.class);
+        user.setRole(ROLE.COMMON); // Admin role users should be registered manually
 
         return userRepository.save(user).getUsername();
     }
@@ -26,11 +27,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getUserByUserName(String userName) {
         User user = userRepository.findByUsername(userName).orElseThrow(() -> new NotFoundException(userName));
-        return UserDto.fromUser(user);
+        return userToUserDto.map(user, UserDto.class);
     }
 
     @Override
     public void update(String username, UserDto userDto) {
-        userRepository.save(UserDto.toUser(userDto));
+        userRepository.save(userDtoToUser.map(userDto, User.class));
     }
 }
