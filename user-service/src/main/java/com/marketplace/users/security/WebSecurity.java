@@ -30,10 +30,10 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
         http.authorizeRequests()
-                .antMatchers(HttpMethod.PUT, "/**/update").hasAnyRole(ROLE.COMMON.toString(), ROLE.ADMIN.toString())
-                .antMatchers("/**/delete").hasRole(ROLE.ADMIN.toString())
-                .antMatchers("/**/verifyProduct").hasRole(ROLE.ADMIN.toString())
-                .antMatchers("/**/product*").hasRole(ROLE.COMMON.toString())
+                .antMatchers(HttpMethod.PUT, "/**/update").hasAnyAuthority(ROLE.ROLE_COMMON.toString(), ROLE.ROLE_ADMIN.toString())
+                .antMatchers("/**/delete").hasAuthority(ROLE.ROLE_ADMIN.toString())
+                .antMatchers("/**/verifyProduct").hasAuthority(ROLE.ROLE_ADMIN.toString())
+                .antMatchers("/**/product*").hasAuthority(ROLE.ROLE_COMMON.toString())
                 .anyRequest().permitAll()
                 .and()
                 .addFilter(new JWTAuthenticationFilter(authenticationManager()))

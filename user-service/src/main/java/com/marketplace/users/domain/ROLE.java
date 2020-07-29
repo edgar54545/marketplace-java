@@ -1,5 +1,5 @@
 package com.marketplace.users.domain;
 
 public enum ROLE {
-    COMMON, ADMIN
+    ROLE_COMMON, ROLE_ADMIN
 }

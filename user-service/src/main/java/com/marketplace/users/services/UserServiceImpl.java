@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public String addUser(UserDto userDto) {
         UserEntity userEntity = userDtoToUser.map(userDto, UserEntity.class);
-        userEntity.setRole(ROLE.COMMON); // Admin role users should be registered manually
+        userEntity.setRole(ROLE.ROLE_COMMON); // Admin role users should be registered manually
 
         return userRepository.save(userEntity).getUsername();
     }
@@ -45,6 +45,6 @@ public class UserServiceImpl implements UserService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserEntity user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(username));
         return new User(user.getUsername(), user.getBCryptPassword(),
-                List.of(new SimpleGrantedAuthority(ROLE.COMMON.toString())));
+                List.of(new SimpleGrantedAuthority(user.getRole().toString())));
     }
 }

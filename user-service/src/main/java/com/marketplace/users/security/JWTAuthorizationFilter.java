@@ -14,6 +14,7 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -45,11 +46,11 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
     }
 
     private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
-        String token = request.getHeader(HEADER_STRING);
+        String token = request.getHeader(HEADER_STRING).replaceFirst(TOKEN_PREFIX, StringUtils.EMPTY);
         if (StringUtils.isNotBlank(token)) {
             // parse the token.
             Jws<Claims> claimsJws = Jwts.parser()
-                    .setSigningKey(SECRET.getBytes())
+                    .setSigningKey(DatatypeConverter.parseBase64Binary(SECRET))
                     .parseClaimsJws(token);
 
             String username = claimsJws.getSignature();
