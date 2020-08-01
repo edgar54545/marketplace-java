@@ -1,7 +1,7 @@
 package com.marketplace.products.config;
 
 import com.marketplace.products.domain.Product;
-import com.marketplace.products.web.model.ProductRequest;
+import com.marketplace.products.dtos.ProductRequest;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;

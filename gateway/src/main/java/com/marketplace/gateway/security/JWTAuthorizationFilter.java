@@ -1,4 +1,4 @@
-package com.marketplace.users.security;
+package com.marketplace.gateway.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -20,7 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.marketplace.users.constants.Constants.*;
+import static com.marketplace.gateway.model.Constants.*;
 
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 

@@ -1,4 +1,4 @@
-package com.marketplace.products.web.model;
+package com.marketplace.products.dtos;
 
 import com.marketplace.products.domain.Category;
 import lombok.Data;

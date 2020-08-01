@@ -1,6 +1,6 @@
 package com.marketplace.users.services;
 
-import com.marketplace.users.web.model.UserDto;
+import com.marketplace.users.dtos.UserDto;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface UserService extends UserDetailsService {

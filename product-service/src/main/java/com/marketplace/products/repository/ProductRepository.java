@@ -2,7 +2,7 @@ package com.marketplace.products.repository;
 
 import com.marketplace.products.domain.Category;
 import com.marketplace.products.domain.Product;
-import com.marketplace.products.web.model.SearchRequest;
+import com.marketplace.products.dtos.SearchRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;

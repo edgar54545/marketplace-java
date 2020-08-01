@@ -1,10 +1,13 @@
-package com.marketplace.products.web.model;
+package com.marketplace.products.dtos;
 
 import com.marketplace.products.constants.Constants;
 import com.marketplace.products.domain.Category;
 import lombok.Data;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.Set;
 

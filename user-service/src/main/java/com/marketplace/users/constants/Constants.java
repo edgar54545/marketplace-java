@@ -12,9 +12,10 @@ public class Constants {
     public static final String INVALID_EMAIL = "Invalid e-mail";
 
     // Security Constants
-    public static final String SECRET = "secretKeyToGenerateJwt";
-    public static final long EXPIRATION_TIME = 864_000_000; // 10 day
+    public static final String TOKEN_SECRET = "token.secret";
+    public static final String TOKEN_EXPIRATION_TIME = "token.expirationTime";
     public static final String ROLES_CLAIM = "roles";
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String HEADER_STRING = "Authorization";
+    public static final String LOGIN_PATH = "login.path";
 }

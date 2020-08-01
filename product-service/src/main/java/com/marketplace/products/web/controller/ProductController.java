@@ -1,10 +1,10 @@
 package com.marketplace.products.web.controller;
 
 import com.marketplace.products.domain.Category;
+import com.marketplace.products.dtos.ProductRequest;
+import com.marketplace.products.dtos.ProductResponse;
+import com.marketplace.products.dtos.SearchRequest;
 import com.marketplace.products.services.ProductService;
-import com.marketplace.products.web.model.ProductRequest;
-import com.marketplace.products.web.model.ProductResponse;
-import com.marketplace.products.web.model.SearchRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,12 +23,12 @@ import java.util.List;
 public class ProductController {
     private final ProductService productService;
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "save", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity save(@RequestPart(value = "product") @Valid ProductRequest productRequest,
                                @RequestPart(value = "files", required = false) List<MultipartFile> multipartFiles) {
 
         String createdProductId = productService.add(productRequest, multipartFiles);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("{id}")
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().replacePath("api/v1/products/{id}")
                 .buildAndExpand(createdProductId)
                 .toUri();
 

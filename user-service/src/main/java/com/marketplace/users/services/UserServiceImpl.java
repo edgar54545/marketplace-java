@@ -1,10 +1,10 @@
 package com.marketplace.users.services;
 
-import com.marketplace.users.domain.ROLE;
+import com.marketplace.users.domain.Role;
 import com.marketplace.users.domain.UserEntity;
+import com.marketplace.users.dtos.UserDto;
 import com.marketplace.users.repository.UserRepository;
 import com.marketplace.users.web.error_handle.NotFoundException;
-import com.marketplace.users.web.model.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public String addUser(UserDto userDto) {
         UserEntity userEntity = userDtoToUser.map(userDto, UserEntity.class);
-        userEntity.setRole(ROLE.ROLE_COMMON); // Admin role users should be registered manually
+        userEntity.setRole(Role.ROLE_COMMON); // Admin role users should be registered manually
 
         return userRepository.save(userEntity).getUsername();
     }

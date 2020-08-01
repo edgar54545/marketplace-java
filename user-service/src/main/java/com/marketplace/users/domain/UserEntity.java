@@ -44,5 +44,5 @@ public class UserEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private ROLE role;
+    private Role role;
 }

@@ -1,7 +1,7 @@
 package com.marketplace.users.web;
 
+import com.marketplace.users.dtos.UserDto;
 import com.marketplace.users.services.UserService;
-import com.marketplace.users.web.model.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,12 +21,11 @@ public class Controller {
     public ResponseEntity save(@RequestBody @Valid UserDto userDto) {
         String createdUserUsername = userService.addUser(userDto);
 
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{userName}")
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().replacePath("api/v1/users/{userName}")
                 .buildAndExpand(createdUserUsername)
                 .toUri();
 
-        return ResponseEntity.created(location)
-                .build();
+        return ResponseEntity.created(location).build();
     }
 
     @GetMapping(value = "/{username}")

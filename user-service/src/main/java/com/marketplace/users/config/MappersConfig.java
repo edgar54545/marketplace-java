@@ -1,7 +1,7 @@
 package com.marketplace.users.config;
 
 import com.marketplace.users.domain.UserEntity;
-import com.marketplace.users.web.model.UserDto;
+import com.marketplace.users.dtos.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;

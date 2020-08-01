@@ -1,4 +1,4 @@
-package com.marketplace.users.web.model;
+package com.marketplace.users.dtos;
 
 import com.marketplace.users.constants.Constants;
 import lombok.AllArgsConstructor;

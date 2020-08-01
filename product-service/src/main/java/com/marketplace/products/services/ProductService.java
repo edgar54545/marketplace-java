@@ -1,9 +1,9 @@
 package com.marketplace.products.services;
 
 import com.marketplace.products.domain.Category;
-import com.marketplace.products.web.model.ProductRequest;
-import com.marketplace.products.web.model.ProductResponse;
-import com.marketplace.products.web.model.SearchRequest;
+import com.marketplace.products.dtos.ProductRequest;
+import com.marketplace.products.dtos.ProductResponse;
+import com.marketplace.products.dtos.SearchRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;

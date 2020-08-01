@@ -1,4 +1,4 @@
-package com.marketplace.users.web.model;
+package com.marketplace.users.dtos;
 
 import lombok.Getter;
 import lombok.Setter;
