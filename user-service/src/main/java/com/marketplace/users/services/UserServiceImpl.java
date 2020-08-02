@@ -1,5 +1,6 @@
 package com.marketplace.users.services;
 
+import com.marketplace.mail.model.EmailType;
 import com.marketplace.users.domain.Role;
 import com.marketplace.users.domain.UserEntity;
 import com.marketplace.users.dtos.UserDto;
@@ -19,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final MailService mailService;
     private final ModelMapper userToUserDto;
     private final ModelMapper userDtoToUser;
 
@@ -26,8 +28,10 @@ public class UserServiceImpl implements UserService {
     public String addUser(UserDto userDto) {
         UserEntity userEntity = userDtoToUser.map(userDto, UserEntity.class);
         userEntity.setRole(Role.ROLE_COMMON); // Admin role users should be registered manually
+        UserEntity savedUser = userRepository.save(userEntity);
+        mailService.sendMessage(EmailType.GREETING_MAIL, savedUser.getEmail());
 
-        return userRepository.save(userEntity).getUsername();
+        return savedUser.getUsername();
     }
 
     @Override
@@ -38,7 +42,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void update(String username, UserDto userDto) {
-        userRepository.save(userDtoToUser.map(userDto, UserEntity.class));
+        UserEntity updatedUser = userRepository.save(userDtoToUser.map(userDto, UserEntity.class));
+        mailService.sendMessage(EmailType.PROFILE_UPDATE_MAIL, updatedUser.getEmail());
     }
 
     @Override
