@@ -4,7 +4,7 @@ Simple marketplace where users can add products and sell.
 
 ## Prerequisites
 
-What things you need to start
+What you need to start
 
 [JAVA 11+](https://adoptopenjdk.net/) \
 [PostgreSQL](https://www.postgresql.org/download/)\
