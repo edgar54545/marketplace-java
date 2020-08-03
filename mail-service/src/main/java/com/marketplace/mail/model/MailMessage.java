@@ -1,5 +1,7 @@
 package com.marketplace.mail.model;
 
-public class MailMessage {
-
+public interface MailMessage {
+    EmailType getType();
+    String getContent();
+    String getSubject();
 }
