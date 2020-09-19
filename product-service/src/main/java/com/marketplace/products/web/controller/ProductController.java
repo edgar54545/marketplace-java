@@ -23,7 +23,7 @@ import java.util.List;
 public class ProductController {
     private final ProductService productService;
 
-    @PostMapping(value = "save", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/save", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity save(@RequestPart(value = "product") @Valid ProductRequest productRequest,
                                @RequestPart(value = "files", required = false) List<MultipartFile> multipartFiles) {
 
