@@ -10,7 +10,7 @@ What you need to start
 [PostgreSQL](https://www.postgresql.org/download/)\
 [MongoDB](https://www.mongodb.com/try/download/community)\
 [ActiveMQ/Artemis](https://activemq.apache.org/components/artemis/download/)\
-[AWS Accaunt](https://aws.amazon.com/)\
+[AWS Account](https://aws.amazon.com/)\
 [Gmail](https://accounts.google.com/signup/)
 
 Nice To have\
