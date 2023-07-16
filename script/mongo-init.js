@@ -1,0 +1,12 @@
+db.createUser(
+        {
+            "user":"product-service",
+            "pwd":"password",
+            "roles":[
+                {
+                    "role":"readWrite",
+                    "db":"marketplace"
+                }
+               ]
+        }
+ );

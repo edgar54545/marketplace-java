@@ -8,10 +8,10 @@
         <version>2.3.2.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.example.mail</groupId>
-    <artifactId>service</artifactId>
+    <groupId>com.marketplace</groupId>
+    <artifactId>mail-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>service</name>
+    <name>mail-service</name>
     <description>Mail Service</description>
 
     <properties>

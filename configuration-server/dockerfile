@@ -1,0 +1,8 @@
+#run with git.username and git.password as env variables
+FROM eclipse-temurin:11.0.12_7-jdk
+RUN mkdir /app
+ADD /target/configurationserver-0.0.1-SNAPSHOT.jar /app/configurationserver.jar
+
+WORKDIR /app
+EXPOSE 9191
+ENTRYPOINT ["java", "-jar", "configurationserver.jar"]

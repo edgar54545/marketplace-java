@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.marketplace</groupId>
-    <artifactId>images</artifactId>
+    <artifactId>image-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>image-service</name>
     <description>Service for storing images in Amazon S3</description>
@@ -41,6 +41,7 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
+            <version>1.18.22</version>
         </dependency>
 
         <dependency>
